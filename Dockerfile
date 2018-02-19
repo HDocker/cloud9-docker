@@ -14,7 +14,11 @@ RUN apt-get install -y build-essential g++ curl libssl-dev apache2-utils git lib
 # Install Node.js
 RUN curl -sL https://deb.nodesource.com/setup | bash -
 RUN apt-get install -y nodejs
-    
+
+# ------------------------------------------------------------------------------
+# Install Bash Completion
+RUN apt-get install -y bash-completion
+
 # ------------------------------------------------------------------------------
 # Install Cloud9
 RUN git clone https://github.com/c9/core.git /cloud9
@@ -26,6 +30,13 @@ RUN sed -i -e 's_127.0.0.1_0.0.0.0_g' /cloud9/configs/standalone.js
 
 # Add supervisord conf
 ADD conf/cloud9.conf /etc/supervisor/conf.d/
+
+# ------------------------------------------------------------------------------
+# Install Go
+ENV GO_VERSION 1.10
+RUN curl -sL https://storage.googleapis.com/golang/go$GO_VERSION.linux-amd64.tar.gz | tar xz -C /usr/local/ 
+ENV GOPATH /workspace
+ENV PATH $PATH:/usr/local/go/bin:$GOPATH/bin
 
 # ------------------------------------------------------------------------------
 # Add volumes
